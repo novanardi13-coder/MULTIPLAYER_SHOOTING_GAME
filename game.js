@@ -11,8 +11,6 @@ let mode = "";
 let playerCount = 0;
 let gameStarted = false;
 let keys = {};
-
-// Background layer
 let bgY = 0;
 
 // Disable zoom
@@ -36,12 +34,12 @@ startBtn.onclick = ()=>{
     lobby.style.display="none";
     canvas.style.display="block";
     controlsDiv.style.display="flex";
-    setupControls();
+    setupControls();  // pasang tombol HP
     gameStarted=true;
   }
 };
 
-// Player data with different skins/colors
+// Player data
 const players = [
   {x:canvas.width/2-150,y:canvas.height-70,w:40,h:40,color:"#0f0",score:0,life:3,left:"a",right:"d",shoot:"w"},
   {x:canvas.width/2,y:canvas.height-70,w:40,h:40,color:"#0ff",score:0,life:3,left:"ArrowLeft",right:"ArrowRight",shoot:"ArrowUp"},
@@ -52,35 +50,33 @@ let bullets = [];
 let enemies = [];
 let hitEffects = [];
 
-// Button map
 const btnMap = [
   {left:"p1Left",shoot:"p1Shoot",right:"p1Right"},
   {left:"p2Left",shoot:"p2Shoot",right:"p2Right"},
   {left:"p3Left",shoot:"p3Shoot",right:"p3Right"}
 ];
 
-// Setup HP buttons
+// Setup tombol HP
 function setupControls(){
   for(let i=0;i<3;i++){
     const div = document.getElementById(`p${i+1}Controls`);
     if(i<playerCount){
       div.style.display="flex";
       const btns = btnMap[i];
-      // reset listeners
+
       const leftBtn = document.getElementById(btns.left);
       const rightBtn = document.getElementById(btns.right);
       const shootBtn = document.getElementById(btns.shoot);
-      leftBtn.replaceWith(leftBtn.cloneNode(true));
-      rightBtn.replaceWith(rightBtn.cloneNode(true));
-      shootBtn.replaceWith(shootBtn.cloneNode(true));
 
-      document.getElementById(btns.left).addEventListener("touchstart",()=>keys[players[i].left]=true);
-      document.getElementById(btns.left).addEventListener("touchend",()=>keys[players[i].left]=false);
-      document.getElementById(btns.right).addEventListener("touchstart",()=>keys[players[i].right]=true);
-      document.getElementById(btns.right).addEventListener("touchend",()=>keys[players[i].right]=false);
-      document.getElementById(btns.shoot).addEventListener("touchstart",()=>keys[players[i].shoot]=true);
-      document.getElementById(btns.shoot).addEventListener("touchend",()=>keys[players[i].shoot]=false);
-    } else div.style.display="none";
+      leftBtn.ontouchstart = ()=>keys[players[i].left]=true;
+      leftBtn.ontouchend = ()=>keys[players[i].left]=false;
+      rightBtn.ontouchstart = ()=>keys[players[i].right]=true;
+      rightBtn.ontouchend = ()=>keys[players[i].right]=false;
+      shootBtn.ontouchstart = ()=>keys[players[i].shoot]=true;
+      shootBtn.ontouchend = ()=>keys[players[i].shoot]=false;
+    } else {
+      div.style.display="none";
+    }
   }
 }
 
@@ -89,12 +85,12 @@ setInterval(()=>{
   if(gameStarted) enemies.push({x:Math.random()*(canvas.width-40),y:-40,w:40,h:40,speed:2+Math.random()*2});
 },1000);
 
-// Bullets
+// Shoot
 let lastShot=[0,0,0];
 function shoot(p,owner){
   const now = Date.now();
   if(now-lastShot[owner-1]>300){
-    bullets.push({x:p.x+p.w/2-5,y:p.y,w:10,h:20,owner});
+    bullets.push({x:p.x+p.w/2,y:p.y,w:10,h:20,owner});
     lastShot[owner-1]=now;
   }
 }
@@ -106,7 +102,6 @@ function addHitEffect(x,y){
 
 // Update
 function update(){
-  // move background
   bgY += 2;
   if(bgY>canvas.height) bgY=0;
 
@@ -124,7 +119,7 @@ function update(){
   enemies.forEach(e=>e.y+=e.speed);
   enemies = enemies.filter(e=>e.y<canvas.height+40);
 
-  // Bullet hits
+  // Bullet hits enemy
   enemies.forEach((e,ei)=>{
     bullets.forEach((b,bi)=>{
       if(b.x<b.x+e.w && b.x+b.w>e.x && b.y<e.y+e.h && b.y+b.h>e.y){
@@ -156,7 +151,6 @@ function update(){
 
 // Draw
 function draw(){
-  // Background
   ctx.fillStyle="#111";
   ctx.fillRect(0,0,canvas.width,canvas.height);
   ctx.fillStyle="#222";
@@ -174,7 +168,7 @@ function draw(){
   bullets.forEach(b=>{
     ctx.fillStyle="yellow";
     ctx.beginPath();
-    ctx.arc(b.x+b.w/2,b.y+b.h/2,5,0,2*Math.PI);
+    ctx.arc(b.x,b.y,5,0,2*Math.PI);
     ctx.fill();
   });
 
@@ -200,7 +194,6 @@ function draw(){
     ctx.fillText(`P${i+1}: ${p.score} ❤️${p.life}`,20+i*120,30);
   });
 
-  // Game Over
   if(players.slice(0,playerCount).every(p=>p.life<=0)){
     ctx.fillStyle="white";
     ctx.font="50px Arial";
