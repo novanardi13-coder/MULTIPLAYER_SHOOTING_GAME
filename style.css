@@ -1,9 +1,9 @@
 body {
   margin: 0;
-  background: black;
-  color: white;
+  background: #111;
   font-family: Arial;
   overflow: hidden;
+  color: white;
 }
 
 #lobby {
