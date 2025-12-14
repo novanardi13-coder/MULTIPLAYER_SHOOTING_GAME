@@ -37,8 +37,8 @@ startBtn.onclick = ()=>{
     lobby.style.display="none";
     canvas.style.display="block";
     controlsDiv.style.display="flex";
-    setupControls();
-    gameStarted=true;
+    setupControls();   // pasang tombol HP sesuai playerCount
+    gameStarted=true;  // aktifkan loop update & draw
   }
 };
 
@@ -63,7 +63,7 @@ function setupControls(){
   for(let i=0;i<3;i++){
     const div = document.getElementById(`p${i+1}Controls`);
     if(i<playerCount){
-      div.style.display="flex";
+      div.style.display="flex";  // tampilkan tombol
       const btns = btnMap[i];
       document.getElementById(btns.left).addEventListener("touchstart",()=>keys[players[i].left]=true);
       document.getElementById(btns.left).addEventListener("touchend",()=>keys[players[i].left]=false);
@@ -72,7 +72,7 @@ function setupControls(){
       document.getElementById(btns.shoot).addEventListener("touchstart",()=>keys[players[i].shoot]=true);
       document.getElementById(btns.shoot).addEventListener("touchend",()=>keys[players[i].shoot]=false);
     } else {
-      div.style.display="none";
+      div.style.display="none";   // sembunyikan tombol player yang tidak aktif
     }
   }
 }
