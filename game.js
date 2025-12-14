@@ -7,7 +7,7 @@ const lobby = document.getElementById("lobby");
 const startBtn = document.getElementById("startBtn");
 const controlsDiv = document.getElementById("controls");
 
-let mode = "";         // solo / vs / 3p
+let mode = "";         
 let playerCount = 0;
 let gameStarted = false;
 let keys = {};
@@ -22,22 +22,24 @@ document.addEventListener('gesturestart', e=>e.preventDefault());
 document.addEventListener("keydown", e => keys[e.key]=true);
 document.addEventListener("keyup", e => keys[e.key]=false);
 
-// Set mode
+// Set mode & playerCount
 function setMode(m){
   mode = m;
-  startBtn.disabled = false;
   if(mode=="solo") playerCount=1;
-  if(mode=="vs") playerCount=2;
-  if(mode=="3p") playerCount=3;
+  else if(mode=="vs") playerCount=2;
+  else if(mode=="3p") playerCount=3;
+  startBtn.disabled=false;
 }
 
 // START GAME
 startBtn.onclick = ()=>{
-  lobby.style.display="none";
-  canvas.style.display="block";
-  controlsDiv.style.display="flex";
-  setupControls();
-  gameStarted=true;
+  if(playerCount>0){
+    lobby.style.display="none";
+    canvas.style.display="block";
+    controlsDiv.style.display="flex";
+    setupControls();
+    gameStarted=true;
+  }
 };
 
 // Player data
@@ -50,22 +52,18 @@ const players = [
 let bullets = [];
 let enemies = [];
 
-// Tombol HP
 const btnMap = [
   {left:"p1Left", shoot:"p1Shoot", right:"p1Right"},
   {left:"p2Left", shoot:"p2Shoot", right:"p2Right"},
   {left:"p3Left", shoot:"p3Shoot", right:"p3Right"}
 ];
 
-// Setup tombol HP sesuai jumlah player
+// Setup tombol HP sesuai playerCount
 function setupControls(){
   for(let i=0;i<3;i++){
     const div = document.getElementById(`p${i+1}Controls`);
-    if(i<playerCount) div.style.display="flex";
-    else div.style.display="none";
-
-    // Tambah event listener
     if(i<playerCount){
+      div.style.display="flex";
       const btns = btnMap[i];
       document.getElementById(btns.left).addEventListener("touchstart",()=>keys[players[i].left]=true);
       document.getElementById(btns.left).addEventListener("touchend",()=>keys[players[i].left]=false);
@@ -73,6 +71,8 @@ function setupControls(){
       document.getElementById(btns.right).addEventListener("touchend",()=>keys[players[i].right]=false);
       document.getElementById(btns.shoot).addEventListener("touchstart",()=>keys[players[i].shoot]=true);
       document.getElementById(btns.shoot).addEventListener("touchend",()=>keys[players[i].shoot]=false);
+    } else {
+      div.style.display="none";
     }
   }
 }
