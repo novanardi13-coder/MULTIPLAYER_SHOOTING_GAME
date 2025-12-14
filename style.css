@@ -24,13 +24,24 @@ button {
 
 #controls {
   position: fixed;
-  bottom: 10px;
   width: 100%;
-  display: flex;
-  justify-content: space-around;
+  height: 100%;
+  pointer-events: none;
 }
+
+.playerControls {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  pointer-events: auto;
+}
+
+#p1Controls { bottom:10px; left:10px; }
+#p2Controls { bottom:10px; right:10px; }
+#p3Controls { top:10px; left:10px; }
 
 .playerControls button {
   padding: 15px 20px;
   font-size: 24px;
+  margin: 5px;
 }
