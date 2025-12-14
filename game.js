@@ -7,6 +7,7 @@ const lobby = document.getElementById("lobby");
 const startBtn = document.getElementById("startBtn");
 const controlsDiv = document.getElementById("controls");
 
+let mode = "";         // solo / vs / 3p
 let playerCount = 0;
 let gameStarted = false;
 let keys = {};
@@ -21,14 +22,21 @@ document.addEventListener('gesturestart', e=>e.preventDefault());
 document.addEventListener("keydown", e => keys[e.key]=true);
 document.addEventListener("keyup", e => keys[e.key]=false);
 
-// Pilih jumlah pemain
-function setPlayers(n){ playerCount=n; startBtn.disabled=false; }
+// Set mode
+function setMode(m){
+  mode = m;
+  startBtn.disabled = false;
+  if(mode=="solo") playerCount=1;
+  if(mode=="vs") playerCount=2;
+  if(mode=="3p") playerCount=3;
+}
 
 // START GAME
 startBtn.onclick = ()=>{
   lobby.style.display="none";
   canvas.style.display="block";
   controlsDiv.style.display="flex";
+  setupControls();
   gameStarted=true;
 };
 
@@ -49,15 +57,25 @@ const btnMap = [
   {left:"p3Left", shoot:"p3Shoot", right:"p3Right"}
 ];
 
-btnMap.forEach((btns,i)=>{
-  if(i>=playerCount) return;
-  document.getElementById(btns.left).addEventListener("touchstart",()=>keys[players[i].left]=true);
-  document.getElementById(btns.left).addEventListener("touchend",()=>keys[players[i].left]=false);
-  document.getElementById(btns.right).addEventListener("touchstart",()=>keys[players[i].right]=true);
-  document.getElementById(btns.right).addEventListener("touchend",()=>keys[players[i].right]=false);
-  document.getElementById(btns.shoot).addEventListener("touchstart",()=>keys[players[i].shoot]=true);
-  document.getElementById(btns.shoot).addEventListener("touchend",()=>keys[players[i].shoot]=false);
-});
+// Setup tombol HP sesuai jumlah player
+function setupControls(){
+  for(let i=0;i<3;i++){
+    const div = document.getElementById(`p${i+1}Controls`);
+    if(i<playerCount) div.style.display="flex";
+    else div.style.display="none";
+
+    // Tambah event listener
+    if(i<playerCount){
+      const btns = btnMap[i];
+      document.getElementById(btns.left).addEventListener("touchstart",()=>keys[players[i].left]=true);
+      document.getElementById(btns.left).addEventListener("touchend",()=>keys[players[i].left]=false);
+      document.getElementById(btns.right).addEventListener("touchstart",()=>keys[players[i].right]=true);
+      document.getElementById(btns.right).addEventListener("touchend",()=>keys[players[i].right]=false);
+      document.getElementById(btns.shoot).addEventListener("touchstart",()=>keys[players[i].shoot]=true);
+      document.getElementById(btns.shoot).addEventListener("touchend",()=>keys[players[i].shoot]=false);
+    }
+  }
+}
 
 // Spawn musuh
 setInterval(()=>{
