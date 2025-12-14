@@ -1,25 +1,43 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <title>Game Tembak</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<title>Game Tembak 2D HP</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <div id="lobby">
   <h1>🎮 GAME TEMBAK</h1>
   <p>Pilih jumlah pemain:</p>
-
   <button onclick="setPlayers(1)">1 Player</button>
   <button onclick="setPlayers(2)">2 Player</button>
   <button onclick="setPlayers(3)">3 Player</button>
-
   <br><br>
   <button id="startBtn" disabled>START GAME</button>
 </div>
 
 <canvas id="game" style="display:none;"></canvas>
+
+<!-- Tombol kontrol HP -->
+<div id="controls" style="display:none;">
+  <div class="playerControls" id="p1Controls">
+    <button id="p1Left">◀</button>
+    <button id="p1Shoot">🔥</button>
+    <button id="p1Right">▶</button>
+  </div>
+  <div class="playerControls" id="p2Controls">
+    <button id="p2Left">◀</button>
+    <button id="p2Shoot">🔥</button>
+    <button id="p2Right">▶</button>
+  </div>
+  <div class="playerControls" id="p3Controls">
+    <button id="p3Left">◀</button>
+    <button id="p3Shoot">🔥</button>
+    <button id="p3Right">▶</button>
+  </div>
+</div>
 
 <script src="game.js"></script>
 </body>
